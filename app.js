@@ -1,14 +1,19 @@
 const express = require('express');
 const { getProduct } = require('./database/products')
 const server = express();
+const mainRouter = require('./routes/main');
 
 server.set('view engine', 'ejs');
 server.set('views', './views');
 
 server.use((req, res, next) => {
   console.log('URL: ', req.url);
-  res.send('Text');
-})
+  // res.send('Text');
+  next();
+});
+
+server.use('/', mainRouter);
+
 
 server.use(express.static('./public'));
 
@@ -24,16 +29,20 @@ res.render('index', {title: 'Main page', products });
 
   });
 
-// server.get('/product/:id', (req, res)=>  {
-//   const { id } = req.params;
+  server.get('/product/:id', (req, res)=>  {
+    const { id } = req.params;
 
-// const product = getProduct( Number(id) );
-// // console.log('product: ', product);
+  const product = getProduct( Number(id) );
 
-// res.render('main', { product });
+  res.render('main', { product });
 
-//   });
+    });
 
+  server.use((req, res, next) => {
+    res.statusCode = 404;
+    res.render('404');
+
+   });
 
 
 server.listen(3000);
