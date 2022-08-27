@@ -45,4 +45,5 @@ res.render('index', {title: 'Main page', products });
    });
 
 
+
 server.listen(3000);
